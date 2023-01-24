@@ -70,3 +70,23 @@ abstract class ProcessCameraProviderHostApi {
 abstract class ProcessCameraProviderFlutterApi {
   void create(int identifier);
 }
+
+@HostApi(dartHostTestHandler: 'TestVideoCaptureHostApi')
+abstract class VideoCaptureHostApi {
+  void create(int identifier);
+}
+
+@FlutterApi()
+abstract class VideoCaptureFlutterApi {
+  void create(int identifier);
+}
+
+@HostApi(dartHostTestHandler: 'TestRecorderHostApi')
+abstract class RecorderHostApi{
+  void create(int identifier);
+}
+
+@FlutterApi()
+abstract class RecorderFlutterApi {
+  void create(int identifier);
+}
