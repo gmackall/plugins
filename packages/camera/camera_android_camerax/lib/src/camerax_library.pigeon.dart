@@ -366,6 +366,33 @@ class VideoCaptureHostApi {
       return;
     }
   }
+
+  Future<int> withOutput(int arg_identifier, int arg_videoOutputId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.VideoCaptureHostApi.withOutput', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object?>[arg_identifier, arg_videoOutputId]) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else if (replyMap['result'] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyMap['result'] as int?)!;
+    }
+  }
 }
 
 class _VideoCaptureFlutterApiCodec extends StandardMessageCodec {
@@ -388,6 +415,72 @@ abstract class VideoCaptureFlutterApi {
           final int? arg_identifier = (args[0] as int?);
           assert(arg_identifier != null, 'Argument for dev.flutter.pigeon.VideoCaptureFlutterApi.create was null, expected non-null int.');
           api.create(arg_identifier!);
+          return;
+        });
+      }
+    }
+  }
+}
+
+class _RecorderHostApiCodec extends StandardMessageCodec {
+  const _RecorderHostApiCodec();
+}
+
+class RecorderHostApi {
+  /// Constructor for [RecorderHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  RecorderHostApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec = _RecorderHostApiCodec();
+
+  Future<void> create(int arg_identifier, int? arg_aspectRatio, int? arg_bitRate) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.RecorderHostApi.create', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object?>[arg_identifier, arg_aspectRatio, arg_bitRate]) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      return;
+    }
+  }
+}
+
+class _RecorderFlutterApiCodec extends StandardMessageCodec {
+  const _RecorderFlutterApiCodec();
+}
+abstract class RecorderFlutterApi {
+  static const MessageCodec<Object?> codec = _RecorderFlutterApiCodec();
+
+  void create(int identifier, int? aspectRatio, int? bitRate);
+  static void setup(RecorderFlutterApi? api, {BinaryMessenger? binaryMessenger}) {
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.RecorderFlutterApi.create', codec, binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.RecorderFlutterApi.create was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_identifier = (args[0] as int?);
+          assert(arg_identifier != null, 'Argument for dev.flutter.pigeon.RecorderFlutterApi.create was null, expected non-null int.');
+          final int? arg_aspectRatio = (args[1] as int?);
+          final int? arg_bitRate = (args[2] as int?);
+          api.create(arg_identifier!, arg_aspectRatio, arg_bitRate);
           return;
         });
       }

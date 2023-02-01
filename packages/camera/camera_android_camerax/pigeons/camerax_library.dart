@@ -74,6 +74,8 @@ abstract class ProcessCameraProviderFlutterApi {
 @HostApi(dartHostTestHandler: 'TestVideoCaptureHostApi')
 abstract class VideoCaptureHostApi {
   void create(int identifier);
+
+  int withOutput(int identifier, int videoOutputId);
 }
 
 @FlutterApi()
@@ -83,10 +85,10 @@ abstract class VideoCaptureFlutterApi {
 
 @HostApi(dartHostTestHandler: 'TestRecorderHostApi')
 abstract class RecorderHostApi{
-  void create(int identifier);
+  void create(int identifier, int? aspectRatio, int? bitRate);
 }
 
 @FlutterApi()
 abstract class RecorderFlutterApi {
-  void create(int identifier);
+  void create(int identifier, int? aspectRatio, int? bitRate);
 }

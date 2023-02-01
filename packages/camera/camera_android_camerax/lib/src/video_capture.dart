@@ -30,6 +30,12 @@ class VideoCapture extends UseCase {
     _api.createFromInstance(this);
   }
 
+  /*
+  static Future<VideoCapture> withOutput(Recorder recorder) {
+    // recorder input here
+    return
+  }*/
+
   late final VideoCaptureHostApiImpl _api;
 }
 
@@ -89,7 +95,7 @@ class VideoCaptureFlutterApiImpl implements VideoCaptureFlutterApi {
           return VideoCapture.detached(
             binaryMessenger: binaryMessenger,
             instanceManager: instanceManager,
-          )
-        })
+          );
+        });
   }
 }
