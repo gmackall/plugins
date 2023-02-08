@@ -12,3 +12,4 @@ class UseCase extends JavaObject {
   UseCase.detached({super.binaryMessenger, super.instanceManager})
       : super.detached();
 }
+
