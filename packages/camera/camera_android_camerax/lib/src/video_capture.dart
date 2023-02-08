@@ -1,13 +1,14 @@
 import 'package:flutter/services.dart';
 
 import 'android_camera_camerax_flutter_api_impls.dart';
-import 'camerax_library.pigeon.dart';
+import 'camerax_library.g.dart';
 import 'instance_manager.dart';
 import 'java_object.dart';
+import 'recorder.dart';
 import 'use_case.dart';
 
 class VideoCapture extends UseCase {
-  //Creates a that is not automatically attached to a native object.
+  //Creates a VideoCapture that is not automatically attached to a native object.
   VideoCapture.detached({BinaryMessenger? binaryMessenger,
     InstanceManager? instanceManager})
       : super.detached(
@@ -30,11 +31,14 @@ class VideoCapture extends UseCase {
     _api.createFromInstance(this);
   }
 
-  /*
-  static Future<VideoCapture> withOutput(Recorder recorder) {
-    // recorder input here
-    return
-  }*/
+  static Future<VideoCapture> withOutput(BinaryMessenger binaryMessenger, InstanceManager instanceManager,
+      Recorder recorder) async {
+    AndroidCameraXCameraFlutterApis.instance.ensureSetUp();
+    final VideoCaptureHostApiImpl api
+    = VideoCaptureHostApiImpl(binaryMessenger: binaryMessenger, instanceManager: instanceManager);
+
+    return api.withOutputFromInstance(recorder);
+  }
 
   late final VideoCaptureHostApiImpl _api;
 }
@@ -64,6 +68,18 @@ class VideoCaptureHostApiImpl extends VideoCaptureHostApi {
               instanceManager: instanceManager);
         });
     create(identifier);
+  }
+
+  Future<VideoCapture> withOutputFromInstance(Recorder recorder) async {
+    int? identifier = instanceManager.getIdentifier(recorder);
+    identifier ??= instanceManager.addDartCreatedInstance(
+        recorder,
+        onCopy: (Recorder original) {
+          return Recorder(binaryMessenger: binaryMessenger,
+          instanceManager: instanceManager);
+        });
+    return instanceManager.getInstanceWithWeakReference(await withOutput(identifier))!
+      as VideoCapture;
   }
 }
 

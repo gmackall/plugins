@@ -103,7 +103,7 @@ abstract class ProcessCameraProviderFlutterApi {
 abstract class VideoCaptureHostApi {
   void create(int identifier);
 
-  int withOutput(int identifier, int videoOutputId);
+  int withOutput(int videoOutputId);
 }
 
 @FlutterApi()

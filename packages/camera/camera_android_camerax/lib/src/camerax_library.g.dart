@@ -488,11 +488,11 @@ class VideoCaptureHostApi {
     }
   }
 
-  Future<int> withOutput(int arg_identifier, int arg_videoOutputId) async {
+  Future<int> withOutput(int arg_videoOutputId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.VideoCaptureHostApi.withOutput', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
-        await channel.send(<Object?>[arg_identifier, arg_videoOutputId]) as Map<Object?, Object?>?;
+        await channel.send(<Object?>[arg_videoOutputId]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',

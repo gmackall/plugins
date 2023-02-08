@@ -26,7 +26,7 @@ public class VideoCaptureHostApiImpl implements VideoCaptureHostApi {
 
     @Override
     @NonNull
-    public Long withOutput(@NonNull Long identifier, @NonNull Long videoOutputId) {
+    public Long withOutput(@NonNull Long videoOutputId) {
         //TODO: allow configuration here, maybe other implementations of VideoOutput interface
         Recorder recorder = (Recorder) Objects.requireNonNull(instanceManager.getInstance(videoOutputId));
         VideoCapture<Recorder> videoCapture = VideoCapture.withOutput(recorder);

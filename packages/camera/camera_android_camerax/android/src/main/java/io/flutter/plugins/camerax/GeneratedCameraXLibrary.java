@@ -568,7 +568,7 @@ public class GeneratedCameraXLibrary {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
   public interface VideoCaptureHostApi {
     void create(@NonNull Long identifier);
-    @NonNull Long withOutput(@NonNull Long identifier, @NonNull Long videoOutputId);
+    @NonNull Long withOutput(@NonNull Long videoOutputId);
 
     /** The codec used by VideoCaptureHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -609,15 +609,11 @@ public class GeneratedCameraXLibrary {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               ArrayList<Object> args = (ArrayList<Object>)message;
-              Number identifierArg = (Number)args.get(0);
-              if (identifierArg == null) {
-                throw new NullPointerException("identifierArg unexpectedly null.");
-              }
-              Number videoOutputIdArg = (Number)args.get(1);
+              Number videoOutputIdArg = (Number)args.get(0);
               if (videoOutputIdArg == null) {
                 throw new NullPointerException("videoOutputIdArg unexpectedly null.");
               }
-              Long output = api.withOutput((identifierArg == null) ? null : identifierArg.longValue(), (videoOutputIdArg == null) ? null : videoOutputIdArg.longValue());
+              Long output = api.withOutput((videoOutputIdArg == null) ? null : videoOutputIdArg.longValue());
               wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {
