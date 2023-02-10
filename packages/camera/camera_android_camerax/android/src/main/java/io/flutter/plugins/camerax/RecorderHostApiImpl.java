@@ -1,12 +1,13 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 package io.flutter.plugins.camerax;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.camera.video.FileOutputOptions;
-import androidx.camera.video.MediaStoreOutputOptions;
 import androidx.camera.video.PendingRecording;
 import androidx.camera.video.Quality;
 import androidx.camera.video.QualitySelector;
@@ -16,7 +17,6 @@ import java.io.File;
 import java.util.Objects;
 
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugins.camerax.GeneratedCameraXLibrary.PendingRecordingFlutterApi;
 import io.flutter.plugins.camerax.GeneratedCameraXLibrary.RecorderHostApi;
 
 public class RecorderHostApiImpl implements RecorderHostApi {

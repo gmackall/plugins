@@ -1,3 +1,7 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 package io.flutter.plugins.camerax;
 
 import android.content.Context;
@@ -5,11 +9,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.camera.video.PendingRecording;
 import androidx.camera.video.Recording;
-import androidx.camera.video.VideoRecordEvent;
 import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
-import java.util.concurrent.Executors;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugins.camerax.GeneratedCameraXLibrary.PendingRecordingHostApi;
