@@ -112,13 +112,47 @@ abstract class VideoCaptureFlutterApi {
 }
 
 @HostApi(dartHostTestHandler: 'TestRecorderHostApi')
-abstract class RecorderHostApi{
+abstract class RecorderHostApi {
   void create(int identifier, int? aspectRatio, int? bitRate);
+
+  int getAspectRatio(int identifier);
+
+  int getTargetVideoEncodingBitRate(int identifier);
+
+  int prepareRecording(int identifier);// TODO: figure out args
 }
 
 @FlutterApi()
 abstract class RecorderFlutterApi {
   void create(int identifier, int? aspectRatio, int? bitRate);
+}
+
+@HostApi(dartHostTestHandler: 'TestPendingRecordingHostApi')
+abstract class PendingRecordingHostApi {
+  int start(int identifier);// TODO: figure out args
+
+  //TODO: audio
+}
+
+@FlutterApi()
+abstract class PendingRecordingFlutterApi {
+  void create(int identifier);
+}
+
+@HostApi(dartHostTestHandler: 'TestRecordingHostApi')
+abstract class RecordingHostApi {
+  void close(int identifier);
+
+  void pause(int identifier);
+
+  void resume(int identifier);
+
+  void stop(int identifier); //TODO: maybe remove close
+}
+
+@FlutterApi()
+abstract class RecordingFlutterApi {
+  void create(int identifier);
 }
 
 @FlutterApi()
