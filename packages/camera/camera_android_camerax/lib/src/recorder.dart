@@ -5,9 +5,10 @@
 import 'package:flutter/services.dart';
 
 import 'android_camera_camerax_flutter_api_impls.dart';
-import 'camerax_library.pigeon.dart';
+import 'camerax_library.g.dart';
 import 'instance_manager.dart';
 import 'java_object.dart';
+import 'pending_recording.dart';
 
 class Recorder extends JavaObject {
   /// Creates a Recorder. TODO: figure out correct comment style
@@ -19,6 +20,7 @@ class Recorder extends JavaObject {
       binaryMessenger: binaryMessenger, instanceManager: instanceManager) {
     AndroidCameraXCameraFlutterApis.instance.ensureSetUp();
     _api = RecorderHostApiImpl(binaryMessenger: binaryMessenger, instanceManager: instanceManager);
+    _api.createFromInstance(this, aspectRatio, bitRate);
   }
 
   Recorder.detached(
@@ -33,6 +35,12 @@ class Recorder extends JavaObject {
   int? aspectRatio;
   int? bitRate;
   late final RecorderHostApiImpl _api;
+
+  /// Prepare a recording that will be saved to a file
+  /// TODO: need to figure out file info here, and passing in other args
+  Future<PendingRecording> prepareRecording() {
+    return _api.prepareRecordingFromInstance(this);
+  }
 }
 
 class RecorderHostApiImpl extends RecorderHostApi {
@@ -56,6 +64,13 @@ class RecorderHostApiImpl extends RecorderHostApi {
               bitRate: bitRate);
         });
     create(identifier, aspectRatio, bitRate);
+  }
+
+  Future<PendingRecording> prepareRecordingFromInstance(Recorder instance) async {
+    final int pendingRecordingId = await prepareRecording(
+        instanceManager.getIdentifier(instance)!);
+
+    return instanceManager.getInstanceWithWeakReference(pendingRecordingId)!;
   }
 }
 

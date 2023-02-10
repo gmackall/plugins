@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'pending_recording.dart';
 import 'preview.dart';
 import 'process_camera_provider.dart';
 import 'camera.dart';
@@ -11,6 +12,8 @@ import 'camera_selector.dart';
 
 import 'package:camera_platform_interface/camera_platform_interface.dart';
 
+import 'recorder.dart';
+import 'recording.dart';
 import 'video_capture.dart';
 
 /// The Android implementation of [CameraPlatform] that uses the CameraX library.
@@ -41,6 +44,10 @@ class AndroidCameraCameraX extends CameraPlatform {
 
   // Objects used for camera configuration:
   CameraSelector? _cameraSelector;
+
+  Recorder? _recorder;
+  PendingRecording? _pendingRecording;
+  Recording? _recording;
 
 
   /// Returns list of all available cameras and their descriptions.
@@ -91,27 +98,40 @@ class AndroidCameraCameraX extends CameraPlatform {
   }
 
   @override
-  Future<void> startVideoRecording(int cameraId, {Duration? maxVideoDuration}) {
+  Future<void> startVideoRecording(int cameraId, {Duration? maxVideoDuration}) async {
     //so if VideoCapture<T> is of type VideoCapture<Recorder>, then this needs to be
     //PendingRecording pendingRecording = videoCapture.getOutput().prepareRecording(~args~) NOTE: file goes in args
     //Recording recording = pendingRecording.start()
     //then return
-    return Future.value(null);
+    _recorder = Recorder(bitRate: 1, aspectRatio: 1);
+    VideoCapture videoCapture = await VideoCapture.withOutput(_recorder!);
+
+    //TODO: get these instead of just asserting. This is just for testing purposes
+    assert(_cameraSelector != null);
+    assert(processCameraProvider != null);
+    processCameraProvider!.bindToLifecycle(_cameraSelector!, [videoCapture]);
+    _pendingRecording = await _recorder!.prepareRecording();
+    _recording = await _pendingRecording!.start();
   }
 
   @override
-  Future<XFile> stopVideoRecording(int cameraId) {
+  Future<XFile> stopVideoRecording(int cameraId) async {
     //Recording.stop(), then return the file we saved to class level from startVideoRecording
     //probably add asserts here to ensure that this method isn't called before startVideoRecording,
     //or else the saved file variable will not have been initialized
+    _recording!.stop();
     return Future.value(XFile('/'));
+    //TODO: return the actual file, and also clean up the fields used for the
+    //three recording methods
   }
 
-  Future<void> pauseVideoRecording(int cameraId) {
+  Future<void> pauseVideoRecording(int cameraId) async {
+    assert(_recording != null);
+    _recording!.pause();
     //Should be as simple as Recording.pause();, with asserts that the recording is initialized
-    throw UnimplementedError('pauseVideoRecording() is not implemented.');
   }
 
+  //TODO: use or delete these
   Future<void> _bindVideoRecordingToLifecycle() async {
     assert(processCameraProvider != null);
     assert(_cameraSelector != null);
