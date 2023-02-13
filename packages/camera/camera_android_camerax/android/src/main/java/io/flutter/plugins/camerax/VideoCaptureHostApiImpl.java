@@ -31,14 +31,18 @@ public class VideoCaptureHostApiImpl implements VideoCaptureHostApi {
     @Override
     @NonNull
     public Long withOutput(@NonNull Long videoOutputId) {
+        System.out.println("At start of withOutput");
         //TODO: allow configuration here, maybe other implementations of VideoOutput interface
-        Recorder recorder = (Recorder) Objects.requireNonNull(instanceManager.getInstance(videoOutputId));
+        //Recorder recorder = (Recorder) Objects.requireNonNull(instanceManager.getInstance(videoOutputId));
+        Recorder recorder = new Recorder.Builder().build();
         VideoCapture<Recorder> videoCapture = VideoCapture.withOutput(recorder);
         final VideoCaptureFlutterApiImpl videoCaptureFlutterApi =
                 new VideoCaptureFlutterApiImpl(binaryMessenger, instanceManager);
-        if (!instanceManager.containsInstance(videoCapture)) {
-            videoCaptureFlutterApi.create(videoCapture, result -> {});
-        }
+        //if (!instanceManager.containsInstance(videoCapture)) {
+        videoCaptureFlutterApi.create(videoCapture, result -> {});
+        //}
+        System.out.println("id is");
+        System.out.println(instanceManager.getIdentifierForStrongReference(videoCapture));
         return instanceManager.getIdentifierForStrongReference(videoCapture);
     }
 }

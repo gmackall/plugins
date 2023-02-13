@@ -7,8 +7,12 @@ import 'camera_info.dart';
 import 'camera_selector.dart';
 import 'camerax_library.g.dart';
 import 'java_object.dart';
+import 'pending_recording.dart';
 import 'process_camera_provider.dart';
+import 'recorder.dart';
+import 'recording.dart';
 import 'system_services.dart';
+import 'video_capture.dart';
 
 /// Handles initialization of Flutter APIs for the Android CameraX library.
 class AndroidCameraXCameraFlutterApis {
@@ -20,6 +24,10 @@ class AndroidCameraXCameraFlutterApis {
     CameraSelectorFlutterApiImpl? cameraSelectorFlutterApi,
     ProcessCameraProviderFlutterApiImpl? processCameraProviderFlutterApi,
     SystemServicesFlutterApiImpl? systemServicesFlutterApi,
+    PendingRecordingFlutterApiImpl? pendingRecordingFlutterApi,
+    RecordingFlutterApiImpl? recordingFlutterApi,
+    RecorderFlutterApiImpl? recorderFlutterApi,
+    VideoCaptureFlutterApiImpl? videoCaptureFlutterApi,
   }) {
     this.javaObjectFlutterApi =
         javaObjectFlutterApi ?? JavaObjectFlutterApiImpl();
@@ -32,6 +40,14 @@ class AndroidCameraXCameraFlutterApis {
     this.cameraFlutterApi = cameraFlutterApi ?? CameraFlutterApiImpl();
     this.systemServicesFlutterApi =
         systemServicesFlutterApi ?? SystemServicesFlutterApiImpl();
+    this.pendingRecordingFlutterApi =
+        pendingRecordingFlutterApi ?? PendingRecordingFlutterApiImpl();
+    this.recordingFlutterApi =
+        recordingFlutterApi ?? RecordingFlutterApiImpl();
+    this.recorderFlutterApi =
+        recorderFlutterApi ?? RecorderFlutterApiImpl();
+    this.videoCaptureFlutterApi =
+        videoCaptureFlutterApi ?? VideoCaptureFlutterApiImpl();
   }
 
   static bool _haveBeenSetUp = false;
@@ -61,6 +77,18 @@ class AndroidCameraXCameraFlutterApis {
   /// Flutter Api for [SystemServices].
   late final SystemServicesFlutterApiImpl systemServicesFlutterApi;
 
+  /// Flutter api for [PendingRecording].
+  late final PendingRecordingFlutterApiImpl pendingRecordingFlutterApi;
+
+  /// Flutter api for [Recording]
+  late final RecordingFlutterApiImpl recordingFlutterApi;
+
+  /// Flutter api for [Recorder]
+  late final RecorderFlutterApiImpl recorderFlutterApi;
+
+  /// Flutter api for [VideoCapture]
+  late final VideoCaptureFlutterApiImpl videoCaptureFlutterApi;
+
   /// Ensures all the Flutter APIs have been setup to receive calls from native code.
   void ensureSetUp() {
     if (!_haveBeenSetUp) {
@@ -70,6 +98,10 @@ class AndroidCameraXCameraFlutterApis {
       ProcessCameraProviderFlutterApi.setup(processCameraProviderFlutterApi);
       CameraFlutterApi.setup(cameraFlutterApi);
       SystemServicesFlutterApi.setup(systemServicesFlutterApi);
+      PendingRecordingFlutterApi.setup(pendingRecordingFlutterApi);
+      RecordingFlutterApi.setup(recordingFlutterApi);
+      RecorderFlutterApi.setup(recorderFlutterApi);
+      VideoCaptureFlutterApi.setup(videoCaptureFlutterApi);
       _haveBeenSetUp = true;
     }
   }

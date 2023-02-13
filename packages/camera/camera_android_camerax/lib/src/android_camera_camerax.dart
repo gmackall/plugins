@@ -14,6 +14,7 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 
 import 'recorder.dart';
 import 'recording.dart';
+import 'system_services.dart';
 import 'video_capture.dart';
 
 /// The Android implementation of [CameraPlatform] that uses the CameraX library.
@@ -55,7 +56,7 @@ class AndroidCameraCameraX extends CameraPlatform {
   Future<List<CameraDescription>> availableCameras() async {
     final List<CameraDescription> cameraDescriptions = <CameraDescription>[];
 
-    ProcessCameraProvider processCameraProvider =
+    processCameraProvider ??=
         await ProcessCameraProvider.getInstance();
     final List<CameraInfo> cameraInfos =
         await processCameraProvider!.getAvailableCameraInfos();
@@ -99,11 +100,16 @@ class AndroidCameraCameraX extends CameraPlatform {
 
   @override
   Future<void> startVideoRecording(int cameraId, {Duration? maxVideoDuration}) async {
+    //TODO: remove temp camera selector used for testing:
+    await SystemServices.requestCameraPermissions(true);
+    _cameraSelector = CameraSelector.getDefaultFrontCamera();
+    processCameraProvider ??= await ProcessCameraProvider.getInstance();
     //so if VideoCapture<T> is of type VideoCapture<Recorder>, then this needs to be
     //PendingRecording pendingRecording = videoCapture.getOutput().prepareRecording(~args~) NOTE: file goes in args
     //Recording recording = pendingRecording.start()
     //then return
     _recorder = Recorder(bitRate: 1, aspectRatio: 1);
+    print("before withoutput");
     VideoCapture videoCapture = await VideoCapture.withOutput(_recorder!);
 
     //TODO: get these instead of just asserting. This is just for testing purposes
@@ -119,8 +125,8 @@ class AndroidCameraCameraX extends CameraPlatform {
     //Recording.stop(), then return the file we saved to class level from startVideoRecording
     //probably add asserts here to ensure that this method isn't called before startVideoRecording,
     //or else the saved file variable will not have been initialized
-    _recording!.stop();
-    return Future.value(XFile('/'));
+    _recording!.close();
+    return Future.value(XFile('/Users/mackall/development/cameraTestOutput/inner'));
     //TODO: return the actual file, and also clean up the fields used for the
     //three recording methods
   }

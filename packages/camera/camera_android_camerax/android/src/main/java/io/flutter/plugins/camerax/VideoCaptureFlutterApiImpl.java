@@ -18,7 +18,7 @@ public class VideoCaptureFlutterApiImpl extends VideoCaptureFlutterApi {
 
     private final InstanceManager instanceManager;
 
-    void create(VideoCapture<Recorder> videoCapture, Reply<Void> reply) {
+    void create(VideoCapture videoCapture, Reply<Void> reply) {
         create(instanceManager.addHostCreatedInstance(videoCapture), reply);
     }
 }

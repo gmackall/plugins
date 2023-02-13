@@ -9,6 +9,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.camera.video.PendingRecording;
 import androidx.camera.video.Recording;
+import androidx.camera.video.VideoRecordEvent;
 import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
@@ -31,12 +32,22 @@ public class PendingRecordingHostApiImpl implements PendingRecordingHostApi {
         this.context = context;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public Long start(@NonNull Long identifier) {
         PendingRecording pendingRecording = getPendingRecordingFromInstanceId(identifier);
         Recording recording = pendingRecording.start(ContextCompat.getMainExecutor(context),
                 (videoRecordEvent) -> {
+            if (videoRecordEvent instanceof VideoRecordEvent.Start) {
+
+            }
+            else if (videoRecordEvent instanceof VideoRecordEvent.Finalize) {
+
+            }
                     //TODO: Do some stuff here based on what videoRecordEvent is an instanceof
                     //https://developer.android.com/reference/androidx/camera/video/VideoRecordEvent
                 });

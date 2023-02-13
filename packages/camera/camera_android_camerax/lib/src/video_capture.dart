@@ -23,7 +23,7 @@ class VideoCapture extends UseCase {
     AndroidCameraXCameraFlutterApis.instance.ensureSetUp();
   }
 
-  //Creates a VideoCapture.
+  /// Creates a VideoCapture.
   VideoCapture({BinaryMessenger? binaryMessenger,
     InstanceManager? instanceManager})
       : super.detached(
@@ -35,7 +35,7 @@ class VideoCapture extends UseCase {
     _api.createFromInstance(this);
   }
 
-  static Future<VideoCapture> withOutput(Recorder recorder, {BinaryMessenger? binaryMessenger, InstanceManager? instanceManager}) async {
+  static Future<VideoCapture> withOutput(Recorder recorder, {BinaryMessenger? binaryMessenger, InstanceManager? instanceManager}) {
     AndroidCameraXCameraFlutterApis.instance.ensureSetUp();
     final VideoCaptureHostApiImpl api
     = VideoCaptureHostApiImpl(binaryMessenger: binaryMessenger, instanceManager: instanceManager);
@@ -81,7 +81,11 @@ class VideoCaptureHostApiImpl extends VideoCaptureHostApi {
           return Recorder(binaryMessenger: binaryMessenger,
           instanceManager: instanceManager);
         });
-    return instanceManager.getInstanceWithWeakReference(await withOutput(identifier))!
+    final int videoCaptureId = await withOutput(identifier)!;
+    print("in dart, video capture id is");
+    print(videoCaptureId);
+    print(instanceManager.containsIdentifier(videoCaptureId));
+    return instanceManager.getInstanceWithWeakReference(videoCaptureId)!
       as VideoCapture;
   }
 }

@@ -44,6 +44,10 @@ public class RecorderHostApiImpl implements RecorderHostApi {
         instanceManager.addDartCreatedInstance(recorder, instanceId);
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public Long getAspectRatio(@NonNull Long identifier) {
@@ -64,7 +68,7 @@ public class RecorderHostApiImpl implements RecorderHostApi {
         Recorder recorder = getRecorderFromInstanceId(identifier);
         //TODO: figure out the proper way for output location to be configured, this is just for
         // local testing
-        File file = new File("/Users/mackall/development/cameraTestOutput");
+        File file = new File("/Users/mackall/development/cameraTestOutput/test.mp4");
         FileOutputOptions fileOutputOptions = new FileOutputOptions.Builder(file).build();
         PendingRecording pendingRecording = recorder.prepareRecording(context, fileOutputOptions);
         //TODO: should this be initialized elsewhere?
