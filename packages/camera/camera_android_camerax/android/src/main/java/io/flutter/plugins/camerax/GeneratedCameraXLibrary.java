@@ -569,6 +569,7 @@ public class GeneratedCameraXLibrary {
   public interface VideoCaptureHostApi {
     void create(@NonNull Long identifier);
     @NonNull Long withOutput(@NonNull Long videoOutputId);
+    @NonNull Long getOutput(@NonNull Long identifier);
 
     /** The codec used by VideoCaptureHostApi. */
     static MessageCodec<Object> getCodec() {
@@ -614,6 +615,30 @@ public class GeneratedCameraXLibrary {
                 throw new NullPointerException("videoOutputIdArg unexpectedly null.");
               }
               Long output = api.withOutput((videoOutputIdArg == null) ? null : videoOutputIdArg.longValue());
+              wrapped.put("result", output);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.VideoCaptureHostApi.getOutput", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Number identifierArg = (Number)args.get(0);
+              if (identifierArg == null) {
+                throw new NullPointerException("identifierArg unexpectedly null.");
+              }
+              Long output = api.getOutput((identifierArg == null) ? null : identifierArg.longValue());
               wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {

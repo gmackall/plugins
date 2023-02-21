@@ -4,16 +4,22 @@
 
 package io.flutter.plugins.camerax;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.camera.video.FileOutputOptions;
+import androidx.camera.video.MediaStoreOutputOptions;
+import androidx.camera.video.MediaStoreOutputOptions.Builder;
 import androidx.camera.video.PendingRecording;
 import androidx.camera.video.Quality;
 import androidx.camera.video.QualitySelector;
 import androidx.camera.video.Recorder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.flutter.plugin.common.BinaryMessenger;
@@ -68,9 +74,18 @@ public class RecorderHostApiImpl implements RecorderHostApi {
         Recorder recorder = getRecorderFromInstanceId(identifier);
         //TODO: figure out the proper way for output location to be configured, this is just for
         // local testing
-        File file = new File("/Users/mackall/development/cameraTestOutput/test.mp4");
-        FileOutputOptions fileOutputOptions = new FileOutputOptions.Builder(file).build();
-        PendingRecording pendingRecording = recorder.prepareRecording(context, fileOutputOptions);
+        String name = "CameraX-recording-" + System.currentTimeMillis() + ".mp4";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Video.Media.DISPLAY_NAME, name);
+        MediaStoreOutputOptions mediaStoreOutputOptions = new MediaStoreOutputOptions.Builder(
+                context.getContentResolver(),
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+                .build();
+        System.out.println("THE PROBABLE OUTPUT DIR IS");
+        System.out.println(mediaStoreOutputOptions.getCollectionUri().getEncodedPath());
+        //File file = new File("/Users/mackall/development/cameraTestOutput/test.mp4");
+        //FileOutputOptions fileOutputOptions = new FileOutputOptions.Builder(file).build();
+        PendingRecording pendingRecording = recorder.prepareRecording(context, mediaStoreOutputOptions);
         //TODO: should this be initialized elsewhere?
 
         // Add the pendingRecording to the instance manager and return its id

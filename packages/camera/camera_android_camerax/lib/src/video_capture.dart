@@ -43,6 +43,10 @@ class VideoCapture extends UseCase {
     return api.withOutputFromInstance(recorder);
   }
 
+  Future<Recorder> getOutput() {
+    return _api.getOutputFromInstance(this);
+  }
+
   late final VideoCaptureHostApiImpl _api;
 }
 
@@ -87,6 +91,12 @@ class VideoCaptureHostApiImpl extends VideoCaptureHostApi {
     print(instanceManager.containsIdentifier(videoCaptureId));
     return instanceManager.getInstanceWithWeakReference(videoCaptureId)!
       as VideoCapture;
+  }
+
+  Future<Recorder> getOutputFromInstance(VideoCapture instance) async {
+    int? identifier = instanceManager.getIdentifier(instance);
+    int recorderId = await getOutput(identifier!);
+    return instanceManager.getInstanceWithWeakReference(recorderId)!;
   }
 }
 

@@ -40,17 +40,25 @@ public class PendingRecordingHostApiImpl implements PendingRecordingHostApi {
     @Override
     public Long start(@NonNull Long identifier) {
         PendingRecording pendingRecording = getPendingRecordingFromInstanceId(identifier);
+        System.out.println("RIGHT BEFORE PRINT ZONE");
         Recording recording = pendingRecording.start(ContextCompat.getMainExecutor(context),
                 (videoRecordEvent) -> {
             if (videoRecordEvent instanceof VideoRecordEvent.Start) {
-
+                System.out.println("STARTING SUCCESSFULLY GRAY");
             }
             else if (videoRecordEvent instanceof VideoRecordEvent.Finalize) {
-
+                System.out.println("WE HAVE AN ISSUE");
+                System.out.println(((VideoRecordEvent.Finalize) videoRecordEvent).hasError());
+                //System.out.println(((VideoRecordEvent.Finalize) videoRecordEvent).getCause().toString());
+                System.out.println(((VideoRecordEvent.Finalize) videoRecordEvent).getError());
+            }
+            else if (videoRecordEvent instanceof VideoRecordEvent.Status) {
+                System.out.println(videoRecordEvent.getRecordingStats().getRecordedDurationNanos());
             }
                     //TODO: Do some stuff here based on what videoRecordEvent is an instanceof
                     //https://developer.android.com/reference/androidx/camera/video/VideoRecordEvent
                 });
+        //recording.resume();
         RecordingFlutterApiImpl recordingFlutterApi = new RecordingFlutterApiImpl(binaryMessenger,
                 instanceManager);
         recordingFlutterApi.create(recording, reply -> {});

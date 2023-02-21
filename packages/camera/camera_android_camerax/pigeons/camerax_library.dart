@@ -104,6 +104,8 @@ abstract class VideoCaptureHostApi {
   void create(int identifier);
 
   int withOutput(int videoOutputId);
+
+  int getOutput(int identifier);
 }
 
 @FlutterApi()

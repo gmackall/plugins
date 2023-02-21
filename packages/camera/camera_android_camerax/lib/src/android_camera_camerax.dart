@@ -102,7 +102,8 @@ class AndroidCameraCameraX extends CameraPlatform {
   Future<void> startVideoRecording(int cameraId, {Duration? maxVideoDuration}) async {
     //TODO: remove temp camera selector used for testing:
     await SystemServices.requestCameraPermissions(true);
-    _cameraSelector = CameraSelector.getDefaultFrontCamera();
+    //_cameraSelector = CameraSelector.getDefaultFrontCamera();
+    _cameraSelector = CameraSelector.getDefaultBackCamera();
     processCameraProvider ??= await ProcessCameraProvider.getInstance();
     //so if VideoCapture<T> is of type VideoCapture<Recorder>, then this needs to be
     //PendingRecording pendingRecording = videoCapture.getOutput().prepareRecording(~args~) NOTE: file goes in args
@@ -111,6 +112,7 @@ class AndroidCameraCameraX extends CameraPlatform {
     _recorder = Recorder(bitRate: 1, aspectRatio: 1);
     print("before withoutput");
     VideoCapture videoCapture = await VideoCapture.withOutput(_recorder!);
+    _recorder = await videoCapture.getOutput();
 
     //TODO: get these instead of just asserting. This is just for testing purposes
     assert(_cameraSelector != null);
@@ -122,19 +124,15 @@ class AndroidCameraCameraX extends CameraPlatform {
 
   @override
   Future<XFile> stopVideoRecording(int cameraId) async {
-    //Recording.stop(), then return the file we saved to class level from startVideoRecording
-    //probably add asserts here to ensure that this method isn't called before startVideoRecording,
-    //or else the saved file variable will not have been initialized
     _recording!.close();
     return Future.value(XFile('/Users/mackall/development/cameraTestOutput/inner'));
     //TODO: return the actual file, and also clean up the fields used for the
-    //three recording methods
+    //three recording methods. Need to convert from URI
   }
 
   Future<void> pauseVideoRecording(int cameraId) async {
     assert(_recording != null);
     _recording!.pause();
-    //Should be as simple as Recording.pause();, with asserts that the recording is initialized
   }
 
   //TODO: use or delete these

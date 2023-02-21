@@ -220,6 +220,7 @@ abstract class TestVideoCaptureHostApi {
 
   void create(int identifier);
   int withOutput(int videoOutputId);
+  int getOutput(int identifier);
   static void setup(TestVideoCaptureHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -249,6 +250,22 @@ abstract class TestVideoCaptureHostApi {
           final int? arg_videoOutputId = (args[0] as int?);
           assert(arg_videoOutputId != null, 'Argument for dev.flutter.pigeon.VideoCaptureHostApi.withOutput was null, expected non-null int.');
           final int output = api.withOutput(arg_videoOutputId!);
+          return <Object?, Object?>{'result': output};
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.VideoCaptureHostApi.getOutput', codec, binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.VideoCaptureHostApi.getOutput was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_identifier = (args[0] as int?);
+          assert(arg_identifier != null, 'Argument for dev.flutter.pigeon.VideoCaptureHostApi.getOutput was null, expected non-null int.');
+          final int output = api.getOutput(arg_identifier!);
           return <Object?, Object?>{'result': output};
         });
       }
